@@ -13,7 +13,7 @@ function moveElementsBasedOnWidth() {
     visibleCount = 3;
   } else if (windowWidth >= 768) {
     visibleCount = 2;
-  } else if (windowWidth >= 468) {
+  } else if (windowWidth >= 568) {
     visibleCount = 1;
   }
 
