@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move Elements Based on Width</title>
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="destination"></div> <!-- Destination container -->
+
+  <div class="source">Move me First!</div>
+  <div class="source">Move me Second!</div>
+  <div class="source">Move me Third!</div>
+  <div class="source">Move me Fourth!</div>
+  <div class="source">Move me Fifth!</div>
+
+  <script>
+    // Store initial parent of the sources
+    const originalParent = document.createElement('div');
+    const sources = document.querySelectorAll('.source');
+    
+    sources.forEach(source => originalParent.appendChild(source.cloneNode(true))); // Clone the original elements
+
+    function moveElementsBasedOnWidth() {
+      const destination = document.getElementById('destination'); // Destination div
+      const windowWidth = window.innerWidth;
+
+      let visibleCount = 0;
+
+      // Set the visible count based on window width
+      if (windowWidth >= 1400) {
+        visibleCount = 5;
+      } else if (windowWidth >= 1200) {
+        visibleCount = 4;
+      } else if (windowWidth >= 992) {
+        visibleCount = 3;
+      } else if (windowWidth >= 768) {
+        visibleCount = 2;
+      } else if (windowWidth >= 468) {
+        visibleCount = 1;
+      }
+
+      // Clear the destination div
+      destination.innerHTML = '';
+
+      sources.forEach((source, index) => {
+        if (index < visibleCount) {
+          destination.appendChild(source); // Move the element to the destination
+          source.classList.remove('hidden'); // Ensure it's visible
+        } else {
+          // Return elements to the original parent if necessary
+          originalParent.appendChild(source);
+          source.classList.add('hidden');  // Hide the remaining elements
+        }
+      });
+    }
+
+    // Debounce function to prevent rapid function calls
+    function debounce(fn, delay) {
+      let timeoutId;
+      return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => fn.apply(this, args), delay);
+      };
+    }
+
+    // Initial run
+    moveElementsBasedOnWidth();
+
+    // Resize event listener with debounce for real-time updates
+    window.addEventListener('resize', debounce(moveElementsBasedOnWidth, 100));
+
+  </script>
+</body>
+</html>
